@@ -31,6 +31,8 @@ class LoginRegisterPage extends Controller
 
     public function registerRequest()
     {
+        header('Content-Type: application/json');
+
         $UserDataTransform = new UserDataToModel();
         $user = $UserDataTransform->userDataMapper($_POST);
 
@@ -39,21 +41,25 @@ class LoginRegisterPage extends Controller
 
         if($userValidationStatus->getStatus() == ValidationStatus::STATUS_ERROR) {
             $messagesList = $userValidationStatus->getMessageList();
-            foreach ($messagesList as $message) {
-                echo $message . "<br>";
-            }
+            echo json_encode([
+                "status" => "error",
+                "errors" => $messagesList
+            ]);
             return;
         }
 
+        echo json_encode([
+            "status" => "success"
+        ]);
+
         $userRequest = new UserRequests();
         $userRequest->setUserToDB($user);
-        echo "Witaj " . $user->getNick()
-            . " w namszym sklepie, możesz się teraz bezpiecznie zalogować "
-            . "<a href='/shop/login.php'>Logowanie</a>";
     }
 
     public function loginRequest()
     {
+        header('Content-Type: application/json');
+
         $userDataTransform = new UserDataToModel();
         $user = $userDataTransform->userDataMapper($_POST);
 
@@ -71,13 +77,15 @@ class LoginRegisterPage extends Controller
         else
         {
             $messageList = $validateStatus->getMessageList();
-            foreach ($messageList as $message)
-            {
-                echo $message . "<br>";
-            }
+            echo json_encode([
+                "status" => "error",
+                "errors" => $messageList,
+            ]);
             return;
         }
 
-        header("Location: //". $_SERVER['HTTP_HOST'] . "/shop");
+        echo json_encode([
+            "status" => "success",
+        ]);
     }
 }
