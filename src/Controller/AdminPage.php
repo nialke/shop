@@ -43,6 +43,8 @@ class AdminPage extends Controller
 
     public function addProductRequest()
     {
+        header('Content-Type: application/json');
+
         $user = $this->getLoggedUser();
 
         $userValidation = new UserValidation();
@@ -57,22 +59,23 @@ class AdminPage extends Controller
         if ($validateAdmin->getStatus() == ValidationStatus::STATUS_SUCCESS
             && $validateProduct->getStatus() == ValidationStatus::STATUS_SUCCESS)
         {
+            echo json_encode([
+                "status" => "success"
+            ]);
+
             $productRequest = new ProductRequest();
             $productRequest->setProductToDB($product);
-            echo "Dodano poprawnie";
         }
         else
         {
-            $validateAdminMessages = $validateAdmin->getMessageList();
-            $validateProductMessages = $validateProduct->getMessageList();
-            foreach ($validateAdminMessages as $message)
-            {
-                echo $message . "<br>";
-            }
-            foreach ($validateProductMessages as $message)
-            {
-                echo $message . "<br>";
-            }
+            $adminErrors = $validateAdmin->getMessageList();
+            $productErrors = $validateProduct->getMessageList();
+            $messageList = array_merge($adminErrors, $productErrors);
+            echo json_encode([
+                "status" => "error",
+                "message" => $messageList
+            ]);
+
         }
     }
 

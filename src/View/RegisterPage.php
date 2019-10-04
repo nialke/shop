@@ -24,12 +24,10 @@
                 <div class="form-group" width="200px">
                     <label for="exampleInputEmail1">Podaj nick</label>
                     <input id="register_nick" type="text" class="form-control" name="nick" placeholder="Nick">
-                    <div class="error-nick" style="display: none;"></div>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Podaj hasło</label>
                     <input id="register_password" type="password" class="form-control" name="password" placeholder="Hasło">
-                    <div class="error-password" style="display: none;"></div>
                 </div>
                 <button id="send_register" type="submit" class="btn btn-primary">Zarejestruj</button>
             </form>
