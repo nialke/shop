@@ -16,7 +16,8 @@ class OrderValidation
             "ulica" => $_POST['street'],
             "nr domu" => $_POST['house'],
             "kod pocztowy" => $_POST['postcode'],
-            "miasto" => $_POST['city']
+            "miasto" => $_POST['city'],
+            "metoda dostawy" => $_POST['delivery_method']
         ];
 
         foreach ($parameters as $key => $parameter)

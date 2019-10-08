@@ -20,13 +20,11 @@ class AccountPage extends Controller
         $user = $this->getLoggedUser();
         $userValidation = new UserValidation();
         $validateIsLogged = $userValidation->validateIsLogged($user);
-        if($validateIsLogged->getStatus() == ValidationStatus::STATUS_SUCCESS) {
+        if ($validateIsLogged->getStatus() == ValidationStatus::STATUS_SUCCESS) {
 
             include __DIR__ . '/../View/AccountPage.php';
-        }
-        else {
-            foreach ($validateIsLogged->getMessageList() as $errorMessage)
-            {
+        } else {
+            foreach ($validateIsLogged->getMessageList() as $errorMessage) {
                 echo $errorMessage;
             }
         }
@@ -37,13 +35,11 @@ class AccountPage extends Controller
         $user = $this->getLoggedUser();
         $userValidation = new UserValidation();
         $validateIsLogged = $userValidation->validateIsLogged($user);
-        if($validateIsLogged->getStatus() == ValidationStatus::STATUS_SUCCESS) {
+        if ($validateIsLogged->getStatus() == ValidationStatus::STATUS_SUCCESS) {
             $userOrdersArray = $this->getUsersOrders($user);
             include __DIR__ . '/../View/MyOrders.php';
-        }
-        else {
-            foreach ($validateIsLogged->getMessageList() as $errorMessage)
-            {
+        } else {
+            foreach ($validateIsLogged->getMessageList() as $errorMessage) {
                 echo $errorMessage;
             }
         }
@@ -56,14 +52,15 @@ class AccountPage extends Controller
         $product = $this->chooseProductFromHomePage();
         if ($product != NULL) {
             include __DIR__ . '/../View/Delivery.php';
-        }
-        else {
+        } else {
             echo 'Nie wybrano produktu do kupienia';
         }
     }
 
     public function deliveryRequest()
     {
+        header('Content-Type: application/json');
+
         $user = $this->getLoggedUser();
 
         $userValidation = new UserValidation();
@@ -89,22 +86,21 @@ class AccountPage extends Controller
 
                 $deliveryMethod = $_POST['delivery_method'];
 
+                echo json_encode([
+                    "status" => "success"
+                ]);
                 $order = $this->setOrder($userId, $productId, $address, $deliveryMethod);
                 $orderRequest = new OrdersRequest();
                 $orderRequest->setOrderToDB($order);
-
-                echo "Dodano";
+            } else {
+                $messages = $validateFormData->getMessageList();
+                echo json_encode([
+                    "status" => "error",
+                    "message" => $messages
+                ]);
             }
-            else {
-                foreach ($validateFormData->getMessageList() as $error)
-                {
-                    echo $error . "<br>";
-                }
-            }
-        }
-        else {
-            foreach ($validateIsLogged->getMessageList() as $error)
-            {
+        } else {
+            foreach ($validateIsLogged->getMessageList() as $error) {
                 echo $error;
             }
         }
@@ -142,8 +138,7 @@ class AccountPage extends Controller
         $ordersRequest = new OrdersRequest();
 
         $userOrdersArray = $ordersRequest->getUserOrders($user);
-        foreach ($userOrdersArray as $arrayNumber => $order)
-        {
+        foreach ($userOrdersArray as $arrayNumber => $order) {
             $userOrdersArray[$arrayNumber]['product_brand'] = $order['brand'];
             $userOrdersArray[$arrayNumber]['product_model'] = $order['model'];
             $userOrdersArray[$arrayNumber]['product_price'] = $order['price'];

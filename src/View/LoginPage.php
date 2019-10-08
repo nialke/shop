@@ -29,7 +29,7 @@
                      <label for="exampleInputPassword1">Podaj hasło</label>
                      <input id="login_password" type="password" class="form-control" name="password" placeholder="Hasło">
                  </div>
-                 <button id="send_login" type="submit" class="btn btn-primary">Zaloguj</button>
+                 <button id="send_login" type="button" class="btn btn-primary">Zaloguj</button>
              </form>
         </div>
 
